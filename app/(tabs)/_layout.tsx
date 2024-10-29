@@ -1,12 +1,19 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { Tabs, useRouter } from "expo-router";
 import colors from "../../constants/colors";
+import { Tabs, useRouter, useLocalSearchParams } from "expo-router";
 
 export default function TabLayout() {
   const router = useRouter();
-
+  const { userDetails } = useLocalSearchParams();
+  useEffect(() => {
+    if (userDetails) {
+      console.log(`User:${userDetails}`);
+    } else {
+      console.log("No User");
+    }
+  }, [userDetails]);
   return (
     <Tabs
       screenOptions={{
@@ -26,6 +33,7 @@ export default function TabLayout() {
             <FontAwesome size={24} name="home" color={color} />
           ),
         }}
+        initialParams={{ userDetails: userDetails || null }}
       />
 
       {/* Tab 2: Search */}
@@ -37,10 +45,11 @@ export default function TabLayout() {
             <FontAwesome size={24} name="search" color={color} />
           ),
         }}
+        initialParams={{ userDetails: userDetails || null }}
       />
 
       {/* Centered Notch Button */}
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="add"
         options={{
           tabBarButton: () => (
@@ -52,7 +61,7 @@ export default function TabLayout() {
             </TouchableOpacity>
           ),
         }}
-      />
+      /> */}
 
       {/* Tab 3: Favorites */}
       <Tabs.Screen
@@ -63,6 +72,7 @@ export default function TabLayout() {
             <FontAwesome size={24} name="heart" color={color} />
           ),
         }}
+        initialParams={{ userDetails: userDetails || null }}
       />
 
       {/* Tab 4: Settings */}
@@ -74,6 +84,7 @@ export default function TabLayout() {
             <FontAwesome size={24} name="user" color={color} />
           ),
         }}
+        initialParams={{ userDetails: userDetails || null }}
       />
     </Tabs>
   );

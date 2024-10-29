@@ -1,18 +1,29 @@
-import { Text, View, Image } from "react-native";
+import { Text, View, Switch, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as Font from "expo-font";
 import CustomText from "../../components/common/header/textComponent";
+import { LinearGradient } from "expo-linear-gradient";
 
-const greetings = () => {
+const Greetings = ({
+  userDetails,
+  onToggle,
+  selectCategory,
+  setSelectedCategory,
+}) => {
   const [fontLoaded, setFontLoaded] = useState(false);
+  const [isVeg, setIsVeg] = useState(false);
 
   useEffect(() => {
+    console.log("Selected Category:", selectCategory);
     async function loadFont() {
-      await Font.loadAsync({
-        "custom-font": require("../../assets/fonts/Nunito-Regular.ttf"),
-      });
-
-      setFontLoaded(true);
+      try {
+        await Font.loadAsync({
+          "custom-font": require("../../assets/fonts/Nunito-Regular.ttf"),
+        });
+        setFontLoaded(true);
+      } catch (error) {
+        console.error("Error loading font:", error);
+      }
     }
 
     loadFont();
@@ -21,32 +32,73 @@ const greetings = () => {
   if (!fontLoaded) {
     return <Text>Loading...</Text>;
   }
+
+  const toggleSwitch = (value) => {
+    setIsVeg(value);
+    if (onToggle) {
+      onToggle(value ? "veg" : "all");
+      setSelectedCategory(value ? "veg" : "all");
+      console.log("Selected Category:", selectCategory);
+    }
+  };
+
   return (
     <View>
-      <View className="flex-row items-center justify-between mb-4">
-        <View className="flex-col">
+      <View style={styles.container}>
+        {/* Greeting Section */}
+        <View style={styles.greetingContainer}>
           <CustomText
-            title={"Hello, Anne"}
-            fontSize={"text-base"}
-            color={"text-gray-400"}
+            title={`Hello ${userDetails.name}`}
+            fontSize="text-base"
+            color="text-gray-400"
+            Fontweight="font-regular"
           />
           <CustomText
-            title={"What would you like to cook today?"}
-            fontSize={"text-xl"}
-            Fontweight={"font-bold"}
-            color={"text-black"}
-            textwidth={"w-2/3"}
+            title="What would you like to cook today?"
+            fontSize="text-base"
+            Fontweight="font-bold"
+            color="text-black"
+            textwidth="w-2/3"
           />
         </View>
-        <Image
-          source={{
-            uri: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.GPFEY6kfgxbsja6gmrW6rwAAAA%26pid%3DApi&f=1&ipt=94155defd0bff44f947d2d3c6ba4c67c03304006312ce6e493bb05eed8c6a7b5&ipo=images",
-          }}
-          className="w-12 h-12 rounded-full"
-        />
+
+        {/* Switch Section */}
+        <View style={styles.switchContainer}>
+          <Text style={styles.switchLabel}>{isVeg ? "Veg" : "All"}</Text>
+          <Switch
+            trackColor={{ false: "red", true: "green" }}
+            thumbColor={"#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isVeg}
+          />
+        </View>
       </View>
     </View>
   );
 };
 
-export default greetings;
+export default Greetings;
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+
+    marginBottom: 16,
+  },
+  greetingContainer: {
+    flexDirection: "column",
+  },
+  switchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  switchLabel: {
+    marginRight: 2,
+    fontSize: 16,
+    color: "#4B5563",
+    fontFamily: "custom-font",
+  },
+});

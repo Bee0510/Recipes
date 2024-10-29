@@ -2,7 +2,14 @@ import React from "react";
 import { View, TextInput } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
-const InputBox = ({ value, placeholder, onChangeText, keyboardType, icon }) => {
+const InputBox = ({
+  value,
+  placeholder,
+  onChangeText,
+  keyboardType,
+  icon,
+  secure,
+}) => {
   return (
     <View className="flex-row items-center bg-gray-200 rounded-full p-3 mt-2">
       <FontAwesome name={icon} size={20} className="text-gray-500 ml-2" />
@@ -13,6 +20,7 @@ const InputBox = ({ value, placeholder, onChangeText, keyboardType, icon }) => {
         keyboardType={keyboardType}
         value={value}
         onChangeText={onChangeText}
+        secureTextEntry={secure}
       />
     </View>
   );

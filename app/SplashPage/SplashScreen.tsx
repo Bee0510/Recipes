@@ -16,7 +16,7 @@ export default function SplashScreen() {
   }));
 
   useEffect(() => {
-    opacity.value = 0.5; // Start fade-in animation
+    opacity.value = 0.5;
     setTimeout(() => {
       router.replace("/SplashPage/welcome");
     }, 3000);

@@ -12,62 +12,53 @@ import { useForm, Controller } from "react-hook-form";
 import Button from "../../components/common/cards/button";
 import InputBox from "../../components/auth/textinput";
 import { FontAwesome } from "@expo/vector-icons";
-import { registerUser } from "../../api/auth/register";
 import { useRouter } from "expo-router";
-const SignupScreen = () => {
+import { resetPassword } from "@/api/auth/forgot_password";
+
+const forgotpasswordScreen = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "",
-      phone: "",
+      identifier: "",
       email: "",
-      password: "",
-      pin: null,
+      pin: "",
+      newPassword: "",
     },
   });
+
   const router = useRouter();
-  const [user, setUser] = useState(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
   const onSubmit = async (data: {
-    name: String;
-    phone: String;
+    identifier: String;
     email: String;
-    password: String;
     pin: String;
+    newPassword: String;
   }) => {
     setLoading(true);
-
     try {
-      const postData = {
-        name: data.name,
-        phone: data.phone,
-        email: data.email,
-        password: data.password,
-        pin: data.pin,
-      };
-      const response = await registerUser(postData);
-      setUser(response);
-      if (response.message === "User registered successfully") {
+      const response = await resetPassword(data);
+      if (response.message === "Password reset successfully") {
+        router.back();
         ToastAndroid.show(
-          "User registered successfully. Login now to cook",
+          "Password reset successful. Login with new password",
           ToastAndroid.LONG
         );
         router.replace("/SplashPage/welcome");
-        setLoading(false);
-      } else if (response.message === "User Already Exists") {
-        Alert.alert("Success", "User Already Exists");
-        setLoading(false);
+      } else {
+        Alert.alert("Error", response.message);
       }
+      setLoading(false);
     } catch (error) {
-      Alert.alert("Error", "Failed to fetch data");
+      Alert.alert("Error", "Failed to reset password");
       setLoading(false);
     }
   };
@@ -83,7 +74,7 @@ const SignupScreen = () => {
       <View className="justify-between items-center p-6">
         <View className="w-full h-1/3 mb-4">
           <Lottie
-            source={require("../../assets/images/signup.json")}
+            source={require("../../assets/images/bowl.json")}
             autoPlay
             loop
             className="w-full h-full"
@@ -91,55 +82,29 @@ const SignupScreen = () => {
         </View>
         <View className="flex-col justify-start items-center mt-4 space-x-4">
           <Text className="text-black text-2xl font-extrabold text-center mb-2">
-            Start Cooking
+            Reset Password
           </Text>
         </View>
 
-        {/* Name Input */}
+        {/* Identifier Input (Username/Phone) */}
         <Controller
           control={control}
-          name="name"
-          rules={{ required: "Name is required" }}
+          name="identifier"
+          rules={{ required: "Username or Phone is required" }}
           render={({ field: { onChange, value } }) => (
             <>
               <InputBox
                 value={value}
-                placeholder={"Vishal Behera"}
+                placeholder={"Username or Phone"}
                 onChangeText={onChange}
                 keyboardType={"default"}
                 icon={"user"}
                 secure={undefined}
               />
-              {errors.name && (
-                <Text className="text-red-500">{errors.name.message}</Text>
-              )}
-            </>
-          )}
-        />
-
-        {/* Phone Input */}
-        <Controller
-          control={control}
-          name="phone"
-          rules={{
-            required: "Phone number is required",
-            pattern: {
-              value: /^[0-9]{10}$/,
-              message: "Phone number must be 10 digits",
-            },
-          }}
-          render={({ field: { onChange, value } }) => (
-            <>
-              <InputBox
-                value={value}
-                placeholder={"9078434144"}
-                onChangeText={onChange}
-                keyboardType={"phone-pad"}
-                icon={"phone"}
-                secure={undefined}
-              />
-              {errors.phone && (
-                <Text className="text-red-500">{errors.phone.message}</Text>
+              {errors.identifier && (
+                <Text className="text-red-500">
+                  {errors.identifier.message}
+                </Text>
               )}
             </>
           )}
@@ -160,7 +125,7 @@ const SignupScreen = () => {
             <>
               <InputBox
                 value={value}
-                placeholder={"beheravishal19@gmail.com"}
+                placeholder={"your-email@example.com"}
                 onChangeText={onChange}
                 keyboardType={"email-address"}
                 icon={"envelope"}
@@ -173,13 +138,41 @@ const SignupScreen = () => {
           )}
         />
 
-        {/* Password Input */}
+        {/* Pin Input */}
+        <Controller
+          control={control}
+          name="pin"
+          rules={{
+            required: "Pin is required",
+            minLength: {
+              value: 6,
+              message: "Enter a valid 6-digit pin",
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <>
+              <InputBox
+                value={value}
+                placeholder={"Enter your security pin"}
+                onChangeText={onChange}
+                keyboardType={"numeric"}
+                icon={"shield"}
+                secure={undefined}
+              />
+              {errors.pin && (
+                <Text className="text-red-500">{errors.pin.message}</Text>
+              )}
+            </>
+          )}
+        />
+
+        {/* New Password Input */}
         <View className="w-full relative">
           <Controller
             control={control}
-            name="password"
+            name="newPassword"
             rules={{
-              required: "Password is required",
+              required: "New Password is required",
               minLength: {
                 value: 8,
                 message: "Password must be at least 8 characters",
@@ -189,15 +182,15 @@ const SignupScreen = () => {
               <>
                 <InputBox
                   value={value}
-                  placeholder={"********"}
+                  placeholder={"New Password"}
                   onChangeText={onChange}
                   keyboardType={"default"}
-                  secure={!isPasswordVisible ? true : false}
+                  secure={!isPasswordVisible}
                   icon={"lock"}
                 />
-                {errors.password && (
+                {errors.newPassword && (
                   <Text className="text-red-500 justify-center">
-                    {errors.password.message}
+                    {errors.newPassword.message}
                   </Text>
                 )}
               </>
@@ -215,39 +208,11 @@ const SignupScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Pin Input */}
-        <Controller
-          control={control}
-          name="pin"
-          rules={{
-            required: "Pin is required",
-            minLength: {
-              value: 6,
-              message: "Enter a valid Pin",
-            },
-          }}
-          render={({ field: { onChange, value } }) => (
-            <>
-              <InputBox
-                value={value}
-                placeholder={"Pin (In case you forget password)"}
-                onChangeText={onChange}
-                keyboardType={"phone-pad"}
-                icon={"shield"}
-                secure={undefined}
-              />
-              {errors.email && (
-                <Text className="text-red-500">{errors.email.message}</Text>
-              )}
-            </>
-          )}
-        />
-
         {/* Submit Button */}
         <View className="w-full px-16 justify-between mt-4 space-x-4">
           <Button
-            buttonText={loading ? "Please Wait" : "Sign Up"}
-            onPress={loading ? undefined : handleSubmit(onSubmit)} // Call handleSubmit to validate form before submission
+            buttonText={loading ? "Please Wait" : "Reset Password"}
+            onPress={loading ? undefined : handleSubmit(onSubmit)}
             buttonStyle={
               "bg-yellow-400 py-2 px-6 rounded-full shadow-lg items-center"
             }
@@ -259,4 +224,4 @@ const SignupScreen = () => {
   );
 };
 
-export default SignupScreen;
+export default forgotpasswordScreen;
