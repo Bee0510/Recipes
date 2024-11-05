@@ -70,14 +70,15 @@ export default function save() {
     <View className="flex-1 bg-gray-100">
       {/* Header Section */}
       <View className="flex-row justify-center items-center py-2 bg-white shadow-md">
-        <Text className="text-xl font-bold text-black">Saved Recipes</Text>
+        <Text className="text-lg font-semibold text-black">Saved Recipes</Text>
       </View>
 
       <FlatList
-        className="flex-1 px-2 bg-gray-200 pt-2"
+        className="flex-1 px-2 bg-gray-200 pt-2 mb-10"
         data={savedItems}
         numColumns={2}
         keyExtractor={(item) => item.recipe_id.toString()}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <TouchableOpacity
             className="bg-white p-3 rounded-xl mr-4 shadow-md w-44 mb-3"
@@ -107,12 +108,11 @@ export default function save() {
               <AntDesign name="heart" size={20} color="red" />
             </TouchableOpacity>
 
-            <Text className="text-base font-semibold text-black">
+            <Text
+              className="text-sm font-semibold text-black text-center"
+              numberOfLines={2}
+            >
               {item.name}
-            </Text>
-            <Text className="text-gray-500">
-              {item.recipe_time || "N/A"}| {item.level || "Easy"} |{" "}
-              {item.cal || "N/A"} cal
             </Text>
           </TouchableOpacity>
         )}

@@ -53,7 +53,7 @@ const mealTypeList = [
   },
   {
     id: "4",
-    name: "Snack",
+    name: "Snacks",
     icon: require("../../assets/images/dinner.png"),
   },
   {

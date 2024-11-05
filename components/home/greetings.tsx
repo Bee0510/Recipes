@@ -48,14 +48,14 @@ const Greetings = ({
         {/* Greeting Section */}
         <View style={styles.greetingContainer}>
           <CustomText
-            title={`Hello ${userDetails.name}`}
+            title={`Hello, ${userDetails.name}`}
             fontSize="text-base"
             color="text-gray-400"
             Fontweight="font-regular"
           />
           <CustomText
             title="What would you like to cook today?"
-            fontSize="text-base"
+            fontSize="text-sm"
             Fontweight="font-bold"
             color="text-black"
             textwidth="w-2/3"
@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   },
   greetingContainer: {
     flexDirection: "column",
+    width: "80%",
   },
   switchContainer: {
     flexDirection: "row",

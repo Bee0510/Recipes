@@ -15,7 +15,7 @@ export default function index() {
   const { userDetails } = useLocalSearchParams();
   const [parsedUser, setParsedUser] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState("all");
-  const [selectedCategoryname, setSelectedCategoryname] = useState(null);
+  const [selectedCategoryname, setSelectedCategoryname] = useState("5");
 
   useFocusEffect(
     React.useCallback(() => {
@@ -34,7 +34,10 @@ export default function index() {
   return (
     parsedUser && (
       <SafeAreaView>
-        <ScrollView className="flex-col px-[16px]">
+        <ScrollView
+          className="flex-col px-[16px]"
+          showsVerticalScrollIndicator={false}
+        >
           <Greetings
             userDetails={parsedUser}
             onToggle={setSelectedCategoryId}

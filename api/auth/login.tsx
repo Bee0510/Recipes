@@ -2,6 +2,7 @@ import loginModel from "../../models/loginModel";
 import { BASE_URL } from "../constant";
 
 export const loginUser = async (data) => {
+  console.log("Data in loginUser:", data);
   try {
     const response = await fetch(`${BASE_URL}/auth/login`, {
       method: "POST",

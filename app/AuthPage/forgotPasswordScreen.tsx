@@ -14,6 +14,7 @@ import InputBox from "../../components/auth/textinput";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { resetPassword } from "@/api/auth/forgot_password";
+import { showToast } from "@/components/common/toast/toast";
 
 const forgotpasswordScreen = () => {
   const {
@@ -54,11 +55,11 @@ const forgotpasswordScreen = () => {
         );
         router.replace("/SplashPage/welcome");
       } else {
-        Alert.alert("Error", response.message);
+        showToast(response.message);
       }
       setLoading(false);
     } catch (error) {
-      Alert.alert("Error", "Failed to reset password");
+      showToast(error.message);
       setLoading(false);
     }
   };

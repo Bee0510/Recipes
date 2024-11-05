@@ -13,14 +13,14 @@ export const resetPassword = async (data) => {
     const jsonResponse = await response.json();
 
     if (!response.ok) {
-      console.error("Error:", jsonResponse);
+      console.log("Error:", jsonResponse);
       throw new Error(jsonResponse.message || "Failed to reset password");
     }
 
     console.log("Password reset successfully:", jsonResponse);
     return messageModel.fromJson(jsonResponse);
   } catch (error) {
-    console.error("Error in reset password request:", error);
+    console.log("Error in reset password request:", error);
     throw error;
   }
 };

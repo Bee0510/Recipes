@@ -6,6 +6,8 @@ interface UserJson {
   email: String;
   phone: String;
   password: String;
+  pin: String;
+  avatar: Number;
   __v: number;
 }
 
@@ -17,6 +19,8 @@ class User {
   email: String;
   phone: String;
   password: String;
+  pin: String;
+  avatar: Number;
   __v: number;
 
   constructor({
@@ -27,6 +31,8 @@ class User {
     email,
     phone,
     password,
+    pin,
+    avatar,
     __v,
   }: UserJson) {
     this._id = _id;
@@ -36,6 +42,8 @@ class User {
     this.email = email;
     this.phone = phone;
     this.password = password;
+    this.pin = pin;
+    this.avatar = avatar;
     this.__v = __v;
   }
 

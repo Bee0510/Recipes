@@ -70,7 +70,7 @@ const shopping = () => {
             <FontAwesome name="arrow-left" size={20} color="white" />
           </TouchableOpacity>
           <Text className="text-lg font-bold text-white text-center w-[90%]">
-            shopping List
+            Shopping List
           </Text>
         </View>
       </LinearGradient>

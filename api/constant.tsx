@@ -1,4 +1,4 @@
-const BASE_URL = "https://yumbook.onrender.com/api/v1";
+const BASE_URL = "http://vishal.my/api/v1";
 const LOGIN = "auth/login";
 const SIGNUP = "auth/signup";
 

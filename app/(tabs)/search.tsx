@@ -9,6 +9,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
+import Lottie from "lottie-react-native";
 import ItemCard from "../../components/common/cards/item_card";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { searchRecipe } from "@/api/recipes/search";
@@ -58,7 +59,7 @@ export default function SearchScreen() {
       <View className="flex-row items-center bg-gray-200 rounded-full p-2 mx-4 mt-4">
         <TextInput
           className="flex-1 ml-2 text-gray-900"
-          placeholder="Search items..."
+          placeholder="Search your appetite"
           value={searchText}
           onChangeText={(text) => setSearchText(text)}
           placeholderTextColor="#6B7280"
@@ -72,7 +73,28 @@ export default function SearchScreen() {
         <Loader />
       ) : searchResults.length == 0 ? (
         <View className=" items-center justify-center h-[70%] w-full">
-          <Text className="text-gray-500 text-base">Search Something</Text>
+          <Lottie
+            source={require("../../assets/images/signup.json")}
+            autoPlay
+            loop
+            className="w-[30%] h-[30%]"
+          />
+          <Text className="text-gray-500 text-base">
+            Search something yummy
+          </Text>
+        </View>
+      ) : searchResults.message ==
+        "The query does not appear to be a food item." ? (
+        <View className=" items-center justify-center h-[70%] w-full">
+          <Lottie
+            source={require("../../assets/images/signup.json")}
+            autoPlay
+            loop
+            className="w-[30%] h-[30%]"
+          />
+          <Text className="text-gray-500 text-base">
+            Recipe not found. Try something else
+          </Text>
         </View>
       ) : (
         <FlatList

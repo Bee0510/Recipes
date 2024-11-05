@@ -23,12 +23,14 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <View className="flex-1 items-center justify-center bg-[#0C9A61]">
-      <Image
-        source={require("../../assets/images/logo.png")}
-        className="w-1/2 h-2/3"
-        resizeMode="contain"
-      />
+    <View className="flex-1 items-center justify-center bg-white">
+      <View className=" bg-[#0C9A61] rounded-full w-[250px] h-[250px] items-center justify-center">
+        <Image
+          source={require("../../assets/images/logo.png")}
+          className="w-2/3 h-2/3"
+          resizeMode="contain"
+        />
+      </View>
     </View>
   );
 }

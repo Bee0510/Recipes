@@ -62,18 +62,17 @@ const loginScreen = () => {
       if (response.message === "Login successful") {
         ToastAndroid.show("Login successful", ToastAndroid.SHORT);
         await storeUserData(response.user);
-        router.push({
+        router.replace({
           pathname: "/(tabs)",
           params: { userDetails: JSON.stringify(response.user) },
         });
         setLoading(false);
-      } else if (response.message === "Invalid Username or Password") {
+      } else if (response.message === "Invalid username/phone or password") {
         ToastAndroid.show("Invalid Username or Password", ToastAndroid.SHORT);
         setLoading(false);
       }
     } catch (error) {
       ToastAndroid.show("Failed to fetch data", ToastAndroid.SHORT);
-
       setLoading(false);
     } finally {
       setLoading(false);
@@ -88,7 +87,7 @@ const loginScreen = () => {
       scrollEnabled={true}
       bounces={false}
     >
-      <View className="justify-between items-center p-6">
+      <View className="justify-center items-center p-6">
         <View className="w-full h-1/3 mb-4">
           <Lottie
             source={require("../../assets/images/signup.json")}
@@ -98,7 +97,7 @@ const loginScreen = () => {
           />
         </View>
         <View className="flex-col justify-start items-center mt-4 space-x-4">
-          <Text className="text-black text-2xl font-extrabold text-center mb-2">
+          <Text className="text-black text-2xl font-extrabold text-center mb-4">
             Start Cooking
           </Text>
         </View>
@@ -107,12 +106,12 @@ const loginScreen = () => {
         <Controller
           control={control}
           name="username"
-          rules={{ required: "username is required" }}
+          rules={{ required: "Username/Phone number is required" }}
           render={({ field: { onChange, value } }) => (
             <>
               <InputBox
                 value={value}
-                placeholder={"Vishal5464/9078434144"}
+                placeholder={"Username/Phone Number"}
                 onChangeText={onChange}
                 keyboardType={"default"}
                 icon={"user"}
@@ -125,7 +124,7 @@ const loginScreen = () => {
           )}
         />
         {/* Password Input */}
-        <View className="w-full relative">
+        <View className="w-full relative justify-center items-center">
           <Controller
             control={control}
             name="password"
@@ -147,7 +146,7 @@ const loginScreen = () => {
                   icon={"lock"}
                 />
                 {errors.password && (
-                  <Text className="text-red-500 justify-center">
+                  <Text className="text-red-500">
                     {errors.password.message}
                   </Text>
                 )}
@@ -159,7 +158,7 @@ const loginScreen = () => {
             style={{ position: "absolute", right: 20, top: 25 }}
           >
             <FontAwesome
-              username={isPasswordVisible ? "eye-slash" : "eye"}
+              name={isPasswordVisible ? "eye-slash" : "eye"}
               size={20}
               color="black"
             />
@@ -171,14 +170,14 @@ const loginScreen = () => {
           onPress={() => {
             router.push("/AuthPage/forgotPasswordScreen");
           }}
-          className="w-full items-end"
+          className="w-full items-end mt-3"
         >
           <Text className=" text-right text-black font-semibold">
             Forgot Password?
           </Text>
         </TouchableOpacity>
         {/* Submit Button */}
-        <View className="w-full px-16 justify-between mt-4 space-x-4">
+        <View className="w-full px-16 justify-between mt-6 space-x-4">
           {loading ? (
             <ActivityIndicator size="large" color="#0000ff" />
           ) : (
@@ -196,7 +195,7 @@ const loginScreen = () => {
       <View>
         <TouchableOpacity>
           <Text
-            className="text-center text-black font-semibold"
+            className="text-center text-green-500 font-semibold"
             onPress={() => {
               router.push("/AuthPage/SignupScreen");
             }}

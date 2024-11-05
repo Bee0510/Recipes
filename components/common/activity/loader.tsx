@@ -14,7 +14,7 @@ const Loader = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimationIndex((prevIndex) => (prevIndex + 1) % animations.length);
-    }, 1000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "transparent",
   },
   animation: {
     width: width * 0.3,

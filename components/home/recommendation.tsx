@@ -216,7 +216,7 @@ const Recommendation = ({
               </TouchableOpacity>
 
               <Text
-                className="text-base font-semibold text-black"
+                className="text-sm font-semibold text-black"
                 numberOfLines={1}
               >
                 {item.name}

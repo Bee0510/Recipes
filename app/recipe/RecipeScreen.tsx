@@ -208,7 +208,7 @@ const RecipeScreen = () => {
 
         <Text className="text-gray-500 mb-4">
           {ita.recipe_time || "N/A"} | {ita.level || "Easy"} |{" "}
-          {ita.cal || "N/A"}
+          {ita.cal || "N/A"} Cal
         </Text>
         <Text className="text-gray-500 mb-4">
           Servings: {ita.serving || "N/A"}

@@ -27,20 +27,23 @@ const toprecipes = ({ userDetails }) => {
     } finally {
     }
   };
+
   useEffect(() => {
     getTopRecipe();
   }, []);
   return topItems.length == 0 ? (
     <ActivityIndicator />
   ) : (
-    <View className="flex-col mt-[30px]">
-      <CustomText
-        title={"Top Recipes Of The Day"}
-        fontSize={"text-lg"}
-        Fontweight={"font-medium"}
-        color={"text-black"}
-      />
-      <View className="h-[10px]"></View>
+    <View className="flex-col mt-[10px]">
+      <View className="mb-4">
+        <CustomText
+          title={"Top Recipes"}
+          fontSize={"text-lg"}
+          Fontweight={"font-medium"}
+          color={"text-black"}
+        />
+      </View>
+
       <FlatList
         data={topItems}
         horizontal
@@ -61,11 +64,14 @@ const toprecipes = ({ userDetails }) => {
           >
             <Image
               source={{ uri: item.image }}
-              className="w-full h-36 rounded-lg mb-2"
+              className="w-full h-32 rounded-lg mb-2"
               resizeMode="cover"
             />
-            <View className=" py-1">
-              <Text className="text-base font-semibold text-black overflow-hidden">
+            <View>
+              <Text
+                className="text-sm font-semibold text-black overflow-hidden"
+                numberOfLines={1}
+              >
                 {item.name}
               </Text>
             </View>

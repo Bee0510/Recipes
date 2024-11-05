@@ -29,10 +29,10 @@ const ItemCard = ({ onpress, item }) => {
 
           {/* Rating and Time */}
           <View className="flex-row items-center space-x-1 mt-1">
-            <FontAwesome name="star" size={14} color="green" />
-            <Text className="text-sm text-black">4.2 (14k+)</Text>
-            <Text className="text-sm text-gray-500">•</Text>
+            <FontAwesome name="clock-o" size={14} color="green" />
             <Text className="text-sm text-gray-500">{item.recipe_time}</Text>
+            <FontAwesome name="cutlery" size={14} color="gr" />
+            <Text className="text-sm text-gray-500">{item.rating}</Text>
           </View>
           {/* Tags and Location */}
           <Text className="text-xs text-gray-500 mt-1">

@@ -49,23 +49,24 @@ export default function welcome() {
       <Text className="text-orange-600 font-semibold text-sm mb-2">
         UNLIMITED PREMIUM RECIPES
       </Text>
-      <Text className="text-black text-4xl font-extrabold text-center mb-6">
+      <Text className="text-black text-3xl font-semibold text-center mb-6">
         Start{"\n"}Cooking
       </Text>
-      <View className="flex-row w-full px-11 justify-between mt-4 space-x-4 ">
+      <View className="flex-row w-full px-11 justify-between mt-4 space-x-4 items-center ">
         <Button
           buttonText={"Log In"}
           onPress={() => {
             router.push("/AuthPage/loginScreen");
           }}
-          buttonStyle={"bg-yellow-400 py-3 px-6 rounded-full shadow-lg"}
+          buttonStyle={"bg-yellow-400 py-2 px-6 rounded-full shadow-lg"}
           textStyle={"text-lg text-black font-semibold"}
         />
 
         {/* Sign Up Button */}
+
         <Button
           buttonText={"Sign Up"}
-          buttonStyle={"bg-green-600 py-3 px-6 rounded-full shadow-lg"}
+          buttonStyle={"bg-green-500 py-2 px-6 rounded-full shadow-lg"}
           textStyle={"text-lg text-black font-semibold"}
           onPress={() => router.push("/AuthPage/SignupScreen")}
         />

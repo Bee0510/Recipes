@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   Alert,
   ToastAndroid,
+  Image,
+  Animated,
+  ActivityIndicator,
 } from "react-native";
 import Lottie from "lottie-react-native";
 import { useForm, Controller } from "react-hook-form";
@@ -14,6 +17,10 @@ import InputBox from "../../components/auth/textinput";
 import { FontAwesome } from "@expo/vector-icons";
 import { registerUser } from "../../api/auth/register";
 import { useRouter } from "expo-router";
+import avatars from "@/constants/avatars";
+import { isLoading } from "expo-font";
+import { showToast } from "@/components/common/toast/toast";
+
 const SignupScreen = () => {
   const {
     control,
@@ -26,12 +33,44 @@ const SignupScreen = () => {
       email: "",
       password: "",
       pin: null,
+      avatar: null,
     },
   });
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedAvatarIndex, setSelectedAvatarIndex] = useState(null);
+  const messages = [
+    "Feeling Hungry?",
+    "Craving Something?",
+    "Register To start Cooking?",
+    "Find Your Meal",
+  ];
+  useEffect(() => {
+    const animateText = () => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true,
+      }).start(() => {
+        setCurrentMessageIndex(
+          (prevIndex) => (prevIndex + 1) % messages.length
+        );
+
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: true,
+        }).start();
+      });
+    };
+
+    const interval = setInterval(animateText, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
@@ -52,19 +91,26 @@ const SignupScreen = () => {
         email: data.email,
         password: data.password,
         pin: data.pin,
+        avatar: selectedAvatarIndex,
       };
-      const response = await registerUser(postData);
-      setUser(response);
-      if (response.message === "User registered successfully") {
-        ToastAndroid.show(
-          "User registered successfully. Login now to cook",
-          ToastAndroid.LONG
-        );
-        router.replace("/SplashPage/welcome");
+      if (selectedAvatarIndex === null) {
+        ToastAndroid.show("Please select an avatar", ToastAndroid.SHORT);
         setLoading(false);
-      } else if (response.message === "User Already Exists") {
-        Alert.alert("Success", "User Already Exists");
-        setLoading(false);
+      } else {
+        const response = await registerUser(postData);
+        setUser(response);
+        if (response.message === "User registered successfully") {
+          ToastAndroid.show(
+            "User registered successfully. Login now to cook",
+            ToastAndroid.LONG
+          );
+          router.replace("/SplashPage/welcome");
+          setLoading(false);
+        } else if (response.message === "User Already Exists") {
+          // Alert.alert("Success", "User Already Exists");
+          showToast("User Already Exists");
+          setLoading(false);
+        }
       }
     } catch (error) {
       Alert.alert("Error", "Failed to fetch data");
@@ -80,8 +126,8 @@ const SignupScreen = () => {
       scrollEnabled={true}
       bounces={false}
     >
-      <View className="justify-between items-center p-6">
-        <View className="w-full h-1/3 mb-4">
+      <View className="justify-center items-center p-6">
+        <View className="w-full h-[100px] mb-4">
           <Lottie
             source={require("../../assets/images/signup.json")}
             autoPlay
@@ -89,12 +135,43 @@ const SignupScreen = () => {
             className="w-full h-full"
           />
         </View>
-        <View className="flex-col justify-start items-center mt-4 space-x-4">
-          <Text className="text-black text-2xl font-extrabold text-center mb-2">
-            Start Cooking
-          </Text>
+        <View className="flex-col justify-start items-center space-x-4 mb-6">
+          <Animated.Text
+            style={{ opacity: fadeAnim }}
+            className="flex-1 ml-2 text-black absolute text-[20px] font-bold"
+          >
+            {messages[currentMessageIndex]}
+          </Animated.Text>
         </View>
-
+        <View className="w-full mt-4 mb-2">
+          <Text className="text-base font-base mb-2 text-center text-green-500">
+            Select your Avatar
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {avatars.map((avatar, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  console.log("Selected Avatar Index:", index);
+                  setSelectedAvatarIndex(index);
+                }}
+                style={{ marginHorizontal: 10 }}
+              >
+                <Image
+                  source={avatar}
+                  style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: 40,
+                    borderWidth: selectedAvatarIndex === index ? 2 : 0,
+                    borderColor:
+                      selectedAvatarIndex === index ? "green" : "transparent",
+                  }}
+                />
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
         {/* Name Input */}
         <Controller
           control={control}
@@ -104,7 +181,7 @@ const SignupScreen = () => {
             <>
               <InputBox
                 value={value}
-                placeholder={"Vishal Behera"}
+                placeholder={"John Doe"}
                 onChangeText={onChange}
                 keyboardType={"default"}
                 icon={"user"}
@@ -132,7 +209,7 @@ const SignupScreen = () => {
             <>
               <InputBox
                 value={value}
-                placeholder={"9078434144"}
+                placeholder={"XXXXXXXXXX"}
                 onChangeText={onChange}
                 keyboardType={"phone-pad"}
                 icon={"phone"}
@@ -160,7 +237,7 @@ const SignupScreen = () => {
             <>
               <InputBox
                 value={value}
-                placeholder={"beheravishal19@gmail.com"}
+                placeholder={"johndoe@gmail.com"}
                 onChangeText={onChange}
                 keyboardType={"email-address"}
                 icon={"envelope"}
@@ -174,7 +251,7 @@ const SignupScreen = () => {
         />
 
         {/* Password Input */}
-        <View className="w-full relative">
+        <View className="w-full relative justify-center items-center">
           <Controller
             control={control}
             name="password"
@@ -223,7 +300,7 @@ const SignupScreen = () => {
             required: "Pin is required",
             minLength: {
               value: 6,
-              message: "Enter a valid Pin",
+              message: "Enter a valid pin",
             },
           }}
           render={({ field: { onChange, value } }) => (
@@ -237,23 +314,34 @@ const SignupScreen = () => {
                 secure={undefined}
               />
               {errors.email && (
-                <Text className="text-red-500">{errors.email.message}</Text>
+                <Text className="text-red-500">{errors.pin.message}</Text>
               )}
             </>
           )}
         />
-
+        <TouchableOpacity
+          onPress={() => router.push("/privacy/privacy_policy")}
+          className="mt-2 items-end w-full px-3"
+        >
+          <Text className="text-blue-500 text-sm font-bold">
+            Privacy Policy
+          </Text>
+        </TouchableOpacity>
         {/* Submit Button */}
-        <View className="w-full px-16 justify-between mt-4 space-x-4">
-          <Button
-            buttonText={loading ? "Please Wait" : "Sign Up"}
-            onPress={loading ? undefined : handleSubmit(onSubmit)} // Call handleSubmit to validate form before submission
-            buttonStyle={
-              "bg-yellow-400 py-2 px-6 rounded-full shadow-lg items-center"
-            }
-            textStyle="text-lg text-black font-semibold"
-          />
-        </View>
+        {loading ? (
+          <ActivityIndicator color={"green"} />
+        ) : (
+          <View className="w-full px-16 justify-between mt-6 space-x-4 mb-6">
+            <Button
+              buttonText={loading ? "Please Wait" : "Sign Up"}
+              onPress={loading ? undefined : handleSubmit(onSubmit)}
+              buttonStyle={
+                "bg-green-500 py-2 px-6 rounded-full shadow-lg items-center"
+              }
+              textStyle="text-lg text-black font-semibold"
+            />
+          </View>
+        )}
       </View>
     </ScrollView>
   );

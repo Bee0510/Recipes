@@ -13,7 +13,6 @@ export const registerUser = async (data) => {
     });
 
     const jsonResponse = await response.json();
-
     // if (!response.ok) {
     //   console.error("Server Error:", jsonResponse);
     //   throw new Error(
