@@ -51,7 +51,7 @@ const SignupScreen = () => {
     const animateText = () => {
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 1000,
+        duration: 3000,
         useNativeDriver: true,
       }).start(() => {
         setCurrentMessageIndex(
@@ -60,7 +60,7 @@ const SignupScreen = () => {
 
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 2000,
+          duration: 3000,
           useNativeDriver: true,
         }).start();
       });
@@ -297,10 +297,10 @@ const SignupScreen = () => {
           control={control}
           name="pin"
           rules={{
-            required: "Pin is required",
+            required: "At least 6 digit pin is required",
             minLength: {
               value: 6,
-              message: "Enter a valid pin",
+              message: "Enter a valid pin at least 6 digits",
             },
           }}
           render={({ field: { onChange, value } }) => (
@@ -313,7 +313,7 @@ const SignupScreen = () => {
                 icon={"shield"}
                 secure={undefined}
               />
-              {errors.email && (
+              {errors.pin && (
                 <Text className="text-red-500">{errors.pin.message}</Text>
               )}
             </>
